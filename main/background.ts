@@ -1,8 +1,12 @@
-import { app } from 'electron';
+import {app} from 'electron';
 import serve from 'electron-serve';
-import { createWindow } from './helpers';
+import spawnWindow from "./windows/spawn-window";
+import {SettingsWindow} from "./windows/settings-window";
+import ApplicationKeybinds from "./application-keybinds/application-keybinds";
+import {OpenSearch} from "./application-keybinds/keybinds/open-search";
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
+let applicationKeybinds: ApplicationKeybinds;
 
 if (isProd) {
   serve({ directory: 'app' });
@@ -13,20 +17,18 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  const mainWindow = createWindow('main', {
-    width: 1280,
-    height: 720,
-  });
-
-  if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
-  } else {
-    const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
-    mainWindow.webContents.openDevTools();
+  if (!isProd) {
+    // During development, you probably want to spawn the window you're working on.
+    spawnWindow(new SettingsWindow());
   }
+
+  applicationKeybinds = new ApplicationKeybinds();
+  applicationKeybinds.registerKeybind(new OpenSearch())
+  applicationKeybinds.load();
 })();
 
-app.on('window-all-closed', () => {
-  app.quit();
-});
+app.on('before-quit', () => {
+  if (applicationKeybinds) {
+    applicationKeybinds.save();
+  }
+})
