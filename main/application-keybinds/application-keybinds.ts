@@ -22,9 +22,11 @@ export default class ApplicationKeybinds {
 
     load() {
         this.keybinds.forEach(kbi => {
-            kbi.keybind = this.store.get<Record<string, string>>(`application-keybind-${kbi.key}`, kbi.defaultKeybind);
+            kbi.keybind = this.store.get<Record<string, string>>(`application-keybind-${kbi.key}`);
+            if (!kbi.keybind) {
+                kbi.keybind = kbi.defaultKeybind
+            }
 
-            console.log(kbi.keybind);
             globalShortcut.register(kbi.keybind, kbi.action);
         })
     }

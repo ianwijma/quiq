@@ -23,7 +23,8 @@ if (isProd) {
   }
 
   applicationKeybinds = new ApplicationKeybinds();
-  applicationKeybinds.registerKeybind(new OpenSearch())
+  applicationKeybinds.reset();
+  applicationKeybinds.registerKeybind(new OpenSearch());
   applicationKeybinds.load();
 })();
 
