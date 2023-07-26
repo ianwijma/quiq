@@ -62,7 +62,9 @@ export default class FlowStorage {
         const serializedFlowMap: SerializedFlowMap =
             this.store.get<Record<string, SerializedFlowMap>>('flow-storage', {});
 
-        for (const serializedFlow of serializedFlowMap) {
+        for (const key in serializedFlowMap) {
+            const serializedFlow = serializedFlowMap[key];
+
             const { id } = serializedFlow;
             this.flowMap[id] = Flow.fromSerialisedFlow(serializedFlow);
         }
@@ -72,7 +74,9 @@ export default class FlowStorage {
     {
         const serializedFlowMap = {};
 
-        for (const flow of this.flowMap) {
+        for (const key in this.flowMap) {
+            const flow = this.flowMap[key];
+
             const { id } = flow;
             serializedFlowMap[id] = flow.serialize();
         }

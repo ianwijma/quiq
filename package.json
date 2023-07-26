@@ -14,7 +14,8 @@
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "isolated-vm": "^4.5.0",
-    "nanoid": "^4.0.2"
+    "nanoid": "^3.3.6",
+    "reactflow": "^11.7.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

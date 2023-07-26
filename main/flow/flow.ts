@@ -15,7 +15,7 @@ export default class Flow {
 
     serialize(): Omit<Flow, never>
     {
-        const {...serializedFlow, nodes} = this;
+        const {nodes, ...serializedFlow} = this;
 
         return {...serializedFlow, nodes: nodes.map(n => n.serialize())};
     }

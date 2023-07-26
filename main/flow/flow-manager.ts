@@ -34,4 +34,9 @@ export class FlowManager {
     {
         return this.flowRunner.run(flow);
     }
+
+    async loadFlows(): Promise<void>
+    {
+        await this.flowStorage.load();
+    }
 }
