@@ -1,11 +1,11 @@
 import {app} from 'electron';
 import serve from 'electron-serve';
 import spawnWindow from "./windows/spawn-window";
-import {SettingsWindow} from "./windows/settings-window";
 import ApplicationKeybinds from "./application-keybinds/application-keybinds";
 import {OpenSearch} from "./application-keybinds/keybinds/open-search";
+import {FlowWindow} from "./windows/flow-window";
+import {isProd} from "./constants/isProd";
 
-const isProd: boolean = process.env.NODE_ENV === 'production';
 let applicationKeybinds: ApplicationKeybinds;
 
 if (isProd) {
@@ -19,7 +19,7 @@ if (isProd) {
 
   if (!isProd) {
     // During development, you probably want to spawn the window you're working on.
-    spawnWindow(new SettingsWindow());
+    spawnWindow(new FlowWindow());
   }
 
   applicationKeybinds = new ApplicationKeybinds();
