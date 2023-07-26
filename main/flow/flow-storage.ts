@@ -1,10 +1,9 @@
 import Store from 'electron-store';
 import Flow from "./flow";
-import type { FlowId } from "./flow";
 
-export type FlowMap = {[key: FlowId]: Flow};
+export type FlowMap = {[key: string]: Flow};
 type SerializedFlow = Omit<Flow, never>
-type SerializedFlowMap = {[key: FlowId]: SerializedFlow};
+type SerializedFlowMap = {[key: string]: SerializedFlow};
 
 export default class FlowStorage {
     constructor(
@@ -38,6 +37,10 @@ export default class FlowStorage {
         const { id } = flow;
 
         if (id in this.flowMap) {
+            if (!(flow instanceof Flow)) {
+                flow = Flow.fromSerialisedFlow(flow);
+            }
+
             this.flowMap[id] = flow;
             this.save();
         } else {

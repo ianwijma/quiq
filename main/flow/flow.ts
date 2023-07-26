@@ -1,10 +1,8 @@
 import {nanoid} from "nanoid";
 import {FlowNode} from "./flow-node";
 
-export type FlowId = string;
-
 export default class Flow {
-    id: FlowId = nanoid();
+    id: string = nanoid();
     name: string = 'No name';
     version: number = 1;
     nodes: FlowNode[] = [];
