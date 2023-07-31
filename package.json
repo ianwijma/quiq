@@ -10,6 +10,9 @@
     "build": "nextron build",
     "postinstall": "electron-builder install-app-deps"
   },
+  "engines": {
+    "node": "^18"
+  },
   "dependencies": {
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
