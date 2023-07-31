@@ -19,7 +19,7 @@ export default () => {
         </li>
         {flows.map(({ id, name }) => (
             <li>
-                <Link href={`/flow/${id}`}>{name}</Link>
+                <Link key={id} href={`/flow/${id}`}>{name}</Link>
             </li>
         ))}
     </ul>

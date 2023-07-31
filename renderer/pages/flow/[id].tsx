@@ -26,11 +26,18 @@ export default () => {
         if (flow) updateFlow(flow);
     }, [flow]);
 
-    return <div>
-        Flow ID: {id}
-        <br/>
-        Flow: {JSON.stringify(flow)}
+    return <div className='w-screen h-screen flex flex-col'>
+        <p>
+            Flow ID: {id}
+            <br/>
+            Flow: {JSON.stringify(flow)}
+        </p>
 
-        {flow ? <FlowEditor flow={flow} updateFlow={f => setFlow(f)} /> : ''}
+        {
+            flow
+                ?   <div className='grow'>
+                        <FlowEditor flow={flow} updateFlow={f => setFlow(f)} />
+                    </div>
+                : ''}
     </div>
 }

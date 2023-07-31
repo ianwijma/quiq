@@ -1,4 +1,4 @@
-import {screen, BrowserWindow, BrowserViewConstructorOptions} from "electron";
+import {screen, BrowserWindow, BrowserWindowConstructorOptions} from "electron";
 import Store from "electron-store";
 
 export interface WindowInstanceInformation {
@@ -60,11 +60,11 @@ export default (windowInstanceInformation: WindowInstanceInformation): BrowserWi
 
     state = ensureVisibleOnSomeDisplay(restore());
 
-    const windowOptions: BrowserViewConstructorOptions = {
+    const windowOptions: BrowserWindowConstructorOptions = {
         ...state,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
         }
     }
 
