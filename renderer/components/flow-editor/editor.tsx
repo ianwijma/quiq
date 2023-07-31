@@ -1,16 +1,15 @@
-import Flow from "../../../main/flow/flow";
 import ReactFlow, {
     addEdge,
     Controls,
     Edge,
     MiniMap,
     Node,
-    Position, ReactFlowProvider,
+    Position,
     updateEdge,
     useEdgesState,
     useNodesState
 } from "reactflow";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import 'reactflow/dist/base.css'
 
 const triggerNode: Node = {
@@ -42,7 +41,8 @@ const initialNodes: Node[] = [
 const triggerEdge: Edge = { id: 'trigger-edge', source: 'trigger-node', target: initialNodes[0].id };
 const initialEdges: Edge[] = [{ id: 'some-uuid-3', source: 'some-uuid-1', target: 'some-uuid-2' }];
 
-export default ({flow, updateFlow}: {flow: Flow, updateFlow: (flow: Flow) => void}) => {
+
+export default () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([triggerNode, ...initialNodes]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([triggerEdge, ...initialEdges]);
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
@@ -69,21 +69,6 @@ export default ({flow, updateFlow}: {flow: Flow, updateFlow: (flow: Flow) => voi
         edgeUpdateSuccessful.current = true;
     }, []);
 
-    let index = 0;
-    useEffect(() => {
-        // index++
-        // console.log(`${index}:`);
-        // console.log('nodes');
-        // console.log(nodes);
-        // console.log('edges');
-        // console.log(edges);
-    }, [nodes, edges]);
-
-    const onDragStart = (event, nodeType) => {
-        event.dataTransfer.setData('application/reactflow', nodeType);
-        event.dataTransfer.effectAllowed = 'move';
-    };
-
     const onDragOver = useCallback((event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -98,12 +83,10 @@ export default ({flow, updateFlow}: {flow: Flow, updateFlow: (flow: Flow) => voi
             event.preventDefault();
 
             const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-            const type = event.dataTransfer.getData('application/reactflow');
+            const newNodeDataString = event.dataTransfer.getData('application/reactflow');
+            const newNodeData: Partial<Node> = JSON.parse(newNodeDataString);
 
-            // check if the dropped element is valid
-            if (typeof type === 'undefined' || !type) {
-                return;
-            }
+            console.log(newNodeData)
 
             const position = reactFlowInstance.project({
                 x: event.clientX - reactFlowBounds.left,
@@ -111,11 +94,11 @@ export default ({flow, updateFlow}: {flow: Flow, updateFlow: (flow: Flow) => voi
             });
             const newNode = {
                 id: getId(),
-                type,
                 position,
-                data: { label: `${type} node` },
+                data: { label: `${newNodeData.type} node` },
                 sourcePosition: Position.Right,
-                targetPosition: Position.Left
+                targetPosition: Position.Left,
+                ...newNodeData
             };
 
             setNodes((nds) => nds.concat(newNode));
@@ -123,36 +106,27 @@ export default ({flow, updateFlow}: {flow: Flow, updateFlow: (flow: Flow) => voi
         [reactFlowInstance]
     );
 
-    return <ReactFlowProvider>
-        <div className='dndflow w-full h-full flex flex-col'>
-            <aside className='flex gap-5'>
-                <div className='dndnode input' onDragStart={(event) => onDragStart(event, 'default')} draggable>
-                    Code
-                </div>
-            </aside>
-            <div className='reactflow-wrapper grow' ref={reactFlowWrapper}>>
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    // Disconnect edge on drop
-                    onEdgeUpdate={onEdgeUpdate}
-                    onEdgeUpdateStart={onEdgeUpdateStart}
-                    onEdgeUpdateEnd={onEdgeUpdateEnd}
-                    // Drag and drop
-                    onInit={setReactFlowInstance}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                    // Configuration
-                    snapToGrid
-                    fitView
-                >
-                    <MiniMap />
-                    <Controls />
-                </ReactFlow>
-            </div>
-        </div>
-    </ReactFlowProvider>
+    return <div className='grow' ref={reactFlowWrapper}>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            // Disconnect edge on drop
+            onEdgeUpdate={onEdgeUpdate}
+            onEdgeUpdateStart={onEdgeUpdateStart}
+            onEdgeUpdateEnd={onEdgeUpdateEnd}
+            // Drag and drop
+            onInit={setReactFlowInstance}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            // Configuration
+            snapToGrid
+            fitView
+        >
+            <MiniMap />
+            <Controls />
+        </ReactFlow>
+    </div>
 }
