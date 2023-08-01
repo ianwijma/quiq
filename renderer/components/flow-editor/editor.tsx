@@ -11,36 +11,50 @@ import ReactFlow, {
 } from "reactflow";
 import {useCallback, useRef, useState} from "react";
 import 'reactflow/dist/base.css'
+import TriggerNode, {triggerNodeType} from "./Nodes/TriggerNode";
+import FlexNode, {flexNodeType} from "./Nodes/FlexNode";
 
 const triggerNode: Node = {
     id: 'trigger-node',
     dragHandle: 'immovable',
     position: { x: 0, y: 0 },
-    data: { label: 'Trigger' },
-    type: 'input',
-    sourcePosition: Position.Right
+    data: { label: 'Flow Name Here' },
+    type: 'trigger',
 };
 
 const initialNodes: Node[] = [
     {
-        id: 'some-uuid-1',
-        position: { x: 200, y: 0 },
+        id: 'node-uuid-1',
+        position: { x: 300, y: 0 },
         data: { label: 'first' },
-        sourcePosition: Position.Right,
-        targetPosition: Position.Left
+        type: 'flex',
     },
     {
-        id: 'some-uuid-2',
+        id: 'node-uuid-2',
         data: { label: 'second' },
-        position: { x: 400, y: 0 },
-        sourcePosition: Position.Right,
-        targetPosition: Position.Left
+        position: { x: 600, y: 0 },
+        type: 'flex',
     },
 ];
 
-const triggerEdge: Edge = { id: 'trigger-edge', source: 'trigger-node', target: initialNodes[0].id };
-const initialEdges: Edge[] = [{ id: 'some-uuid-3', source: 'some-uuid-1', target: 'some-uuid-2' }];
+const triggerEdge: Edge = {
+    id: 'trigger-edge',
+    target: 'node-uuid-1',
+    targetHandle: '0',
+    source: 'trigger-node',
+};
+const initialEdges: Edge[] = [{
+    id: 'edge-uuid-3',
+    target: 'node-uuid-2',
+    targetHandle: '0',
+    source: 'node-uuid-1',
+    sourceHandle: '0',
+}];
 
+const nodeTypes = {
+    [triggerNodeType]: TriggerNode,
+    [flexNodeType]: FlexNode,
+}
 
 export default () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([triggerNode, ...initialNodes]);
@@ -106,8 +120,9 @@ export default () => {
         [reactFlowInstance]
     );
 
-    return <div className='grow' ref={reactFlowWrapper}>
+    return <div className='grow bg-gray-200' ref={reactFlowWrapper}>
         <ReactFlow
+            // Handle events
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -124,6 +139,7 @@ export default () => {
             // Configuration
             snapToGrid
             fitView
+            nodeTypes={nodeTypes}
         >
             <MiniMap />
             <Controls />

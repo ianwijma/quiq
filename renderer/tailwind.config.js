@@ -7,10 +7,13 @@ module.exports = {
   ],
   theme: {
     colors: {
-      // use colors only specified
+      // Neutral
       white: colors.white,
       gray: colors.gray,
-      blue: colors.blue,
+      black: colors.black,
+      // Brand
+      primary: colors.purple,
+      secondairy: colors.green,
     },
     extend: {},
   },

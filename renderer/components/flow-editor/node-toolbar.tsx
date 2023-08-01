@@ -1,21 +1,17 @@
 import { Node } from 'reactflow';
+import FlexNode, {flexNodeDefaultData, flexNodeType} from "./Nodes/FlexNode";
 
-interface ToolbarNode {
-    label: string,
-    node: Partial<Node>
-}
-
-export default ({ toolbarNodes }: { toolbarNodes: ToolbarNode[] }) => {
+export default () => {
     const onDragStart = (event, node: Partial<Node>) => {
         event.dataTransfer.setData('application/reactflow', JSON.stringify(node));
         event.dataTransfer.effectAllowed = 'move';
     };
 
-    return <div className='flow-editor-toolbar'>
-        {toolbarNodes.map(toolbarNode => (
-            <div key={toolbarNode.label} className='flow-editor-toolbar__node' onDragStart={(event) => onDragStart(event, toolbarNode.node)} draggable>
-                {toolbarNode.label}
+    return <div className='flex gap-3 px-3 py-2 bg-gray-300'>
+        <div className='cursor-grab' onDragStart={(event) => onDragStart(event, { type: flexNodeType,data: flexNodeDefaultData })} draggable>
+            <div>
+            <FlexNode className='pointer-events-none' classNameInternals='pointer-events-none' />
             </div>
-        ))}
+        </div>
     </div>
 }

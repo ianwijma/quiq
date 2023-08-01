@@ -1,9 +1,16 @@
+import Link from "next/link";
 import Flow from "../../../main/flow/flow";
 
 export default ({ flow }: { flow: Flow }) => {
-    return <div>
-        Flow ID: {flow?.id}
-        <br/>
-        Flow: {JSON.stringify(flow ?? {})}
+    return <div className="flex justify-between px-3 py-2 bg-gray-400">
+        <Link href='/flow'>
+            <button>{'<-- Back'}</button>
+        </Link>
+        <h1>
+            {flow?.name}
+            <small>
+                {flow?.id}
+            </small>
+        </h1>
     </div>
 }

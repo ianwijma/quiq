@@ -32,7 +32,7 @@ export default () => {
     return <ReactFlowProvider>
         <div className='w-screen h-screen flex flex-col'>
             <FlowEditorHeader flow={flow} />
-            <FlowEditorNodeToolbar toolbarNodes={[{label: 'memes', node: {type: 'default'}}]} />
+            <FlowEditorNodeToolbar />
             <FlowEditor />
         </div>
     </ReactFlowProvider>
