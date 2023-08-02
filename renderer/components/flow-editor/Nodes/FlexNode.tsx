@@ -1,5 +1,7 @@
 import {Handle, Position} from "reactflow";
 import {useMemo, memo} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCode, faGear} from "@fortawesome/free-solid-svg-icons";
 
 export const flexNodeType = 'flex'
 
@@ -17,7 +19,7 @@ export const flexNodeDefaultData: FlexNodeData = Object.freeze({
     numberOfSources: 1,
 })
 
-export default memo(({ data, className = '' }) => {
+export default memo(({ id, data, className = '' }) => {
     const dataWithDefaults = {...flexNodeDefaultData, ...data};
     const { numberOfSources, numberOfTargets, label } = dataWithDefaults;
 
@@ -26,12 +28,20 @@ export default memo(({ data, className = '' }) => {
 
     const minHeight = useMemo(() => {
         const largestHandles = numberOfTargets > numberOfSources ? numberOfTargets : numberOfSources;
-        const minHeight = 15;
+        const minHeight = 20;
         return largestHandles > 0 ? largestHandles * minHeight : minHeight;
     }, [numberOfSources, numberOfTargets]);
 
     return (
-        <div className={`node_flex flex ${className}`} style={{ minHeight }}>
+        <div className={`node_flex flex relative group w-28 ${className}`} style={{ minHeight, minWidth: '7rem' }}>
+
+            <div className='-z-10 w-full absolute transition-all top-0 group-hover:-top-5 px-2'>
+                <div className="bg-secondairy-400 flex w-full h-5 justify-center items-center gap-1 none cursor-pointer">
+                    <FontAwesomeIcon icon={faGear} className='text-xs' />
+                    <label className="text-xs">Configure</label>
+                </div>
+            </div>
+
             <div className='flex flex-col justify-around'>
                 {targets.map((_, i) => (
                     <Handle
@@ -45,8 +55,8 @@ export default memo(({ data, className = '' }) => {
                 ))}
             </div>
 
-            <div className='bg-primary-600 flex justify-center items-center px-4'>
-                <i>code icon</i>
+            <div className='bg-primary-600 flex justify-center items-center px-4 gap-2 w-full'>
+                <FontAwesomeIcon icon={faCode} />
                 <label>
                     {label}
                 </label>

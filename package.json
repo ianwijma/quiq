@@ -14,6 +14,9 @@
     "node": "^18"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "isolated-vm": "^4.5.0",

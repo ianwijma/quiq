@@ -1,5 +1,7 @@
 import {Handle, Position} from "reactflow";
 import { memo } from 'react';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faShuffle} from "@fortawesome/free-solid-svg-icons";
 
 export const triggerNodeType = 'trigger'
 
@@ -16,8 +18,8 @@ export default memo(({ data }) => {
         const { label } = dataWithDefaults
         return (
             <div>
-                <div className='bg-primary-600 flex justify-center items-center px-4'>
-                    <i>trigger icon</i>
+                <div className='bg-primary-600 flex justify-center items-center px-4 gap-2'>
+                    <FontAwesomeIcon icon={faShuffle} />
                     <label>
                         {label}
                     </label>
