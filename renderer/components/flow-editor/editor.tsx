@@ -11,8 +11,8 @@ import ReactFlow, {
 } from "reactflow";
 import {useCallback, useRef, useState} from "react";
 import 'reactflow/dist/base.css'
-import TriggerNode, {triggerNodeType} from "./Nodes/TriggerNode";
-import FlexNode, {flexNodeType} from "./Nodes/FlexNode";
+import TriggerNode, {triggerNodeType} from "./nodes/TriggerNode";
+import FlexNode, {flexNodeType} from "./nodes/FlexNode";
 
 const triggerNode: Node = {
     id: 'trigger-node',

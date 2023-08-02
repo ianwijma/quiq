@@ -1,7 +1,8 @@
 import {Handle, Position} from "reactflow";
-import {useMemo, memo} from "react";
+import {useMemo, memo, useContext} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCode, faGear} from "@fortawesome/free-solid-svg-icons";
+import {FlowEditorContext} from "../../../contexts/flowEditorContext";
 
 export const flexNodeType = 'flex'
 
@@ -32,10 +33,12 @@ export default memo(({ id, data, className = '' }) => {
         return largestHandles > 0 ? largestHandles * minHeight : minHeight;
     }, [numberOfSources, numberOfTargets]);
 
-    return (
-        <div className={`node_flex flex relative group w-28 ${className}`} style={{ minHeight, minWidth: '7rem' }}>
+    const { editNode } = useContext(FlowEditorContext);
 
-            <div className='-z-10 w-full absolute transition-all top-0 group-hover:-top-5 px-2'>
+    return (
+        <div className={`node_flex flex relative group ${className}`} style={{ minHeight, minWidth: '7rem' }}>
+
+            <div className='-z-10 w-full absolute transition-all top-0 group-hover:-top-5 px-2' onClick={() => editNode(id)}>
                 <div className="bg-secondairy-400 flex w-full h-5 justify-center items-center gap-1 none cursor-pointer">
                     <FontAwesomeIcon icon={faGear} className='text-xs' />
                     <label className="text-xs">Configure</label>
@@ -55,9 +58,9 @@ export default memo(({ id, data, className = '' }) => {
                 ))}
             </div>
 
-            <div className='bg-primary-600 flex justify-center items-center px-4 gap-2 w-full'>
+            <div className='bg-primary-600 flex justify-center items-center px-4 py-2 gap-2 w-full'>
                 <FontAwesomeIcon icon={faCode} />
-                <label>
+                <label className='whitespace-nowrap'>
                     {label}
                 </label>
             </div>

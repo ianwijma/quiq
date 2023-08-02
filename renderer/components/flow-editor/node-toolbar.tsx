@@ -1,5 +1,5 @@
 import { Node } from 'reactflow';
-import FlexNode, {flexNodeDefaultData, flexNodeType} from "./Nodes/FlexNode";
+import FlexNode, {flexNodeDefaultData, flexNodeType} from "./nodes/FlexNode";
 
 export default () => {
     const onDragStart = (event, node: Partial<Node>) => {
@@ -8,9 +8,9 @@ export default () => {
     };
 
     return <div className='flex gap-3 px-3 py-2 bg-gray-300'>
-        <div className='cursor-grab' onDragStart={(event) => onDragStart(event, { type: flexNodeType,data: flexNodeDefaultData })} draggable>
+        <div className='cursor-grab' onDragStart={(event) => onDragStart(event, { type: flexNodeType, data: flexNodeDefaultData })} draggable>
             <div>
-            <FlexNode className='pointer-events-none' classNameInternals='pointer-events-none' />
+                <FlexNode className='pointer-events-none w-36' />
             </div>
         </div>
     </div>

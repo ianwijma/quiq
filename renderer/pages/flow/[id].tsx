@@ -6,6 +6,7 @@ import FlowEditorNodeToolbar from "../../components/flow-editor/node-toolbar";
 import FlowEditor from "../../components/flow-editor/editor";
 import Flow from "../../../main/flow/flow";
 import {ReactFlowProvider} from "reactflow";
+import {FlowEditorContext} from "../../contexts/flowEditorContext";
 
 export default () => {
     const { query } = useRouter();
@@ -29,11 +30,16 @@ export default () => {
         if (flow) updateFlow(flow);
     }, [flow]);
 
+    // TODO: Move flow items here & create edit panel
+    const editNode = (id) => console.log(id);
+
     return <ReactFlowProvider>
-        <div className='w-screen h-screen flex flex-col'>
-            <FlowEditorHeader flow={flow} />
-            <FlowEditorNodeToolbar />
-            <FlowEditor />
-        </div>
+        <FlowEditorContext.Provider value={{ editNode }}>
+            <div className='w-screen h-screen flex flex-col'>
+                <FlowEditorHeader flow={flow} />
+                <FlowEditorNodeToolbar />
+                <FlowEditor />
+            </div>
+        </FlowEditorContext.Provider>
     </ReactFlowProvider>
 }
