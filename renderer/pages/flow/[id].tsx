@@ -14,7 +14,7 @@ export default () => {
 
     const [flow, setFlow] = useState<Flow>();
     const loadFlow = async (id) => {
-        const flow: any = await ipcRenderer.invoke('get-flow', {id});
+        const flow: Flow = await ipcRenderer.invoke('get-flow', {id});
         setFlow(flow);
     }
     const updateFlow = async (flow: Flow) => {
@@ -26,10 +26,6 @@ export default () => {
         if (id) loadFlow(id);
     }, [id])
 
-    useEffect(() => {
-        if (flow) updateFlow(flow);
-    }, [flow]);
-
     // TODO: Move flow items here & create edit panel
     const editNode = (id) => console.log(id);
 
@@ -38,7 +34,7 @@ export default () => {
             <div className='w-screen h-screen flex flex-col'>
                 <FlowEditorHeader flow={flow} />
                 <FlowEditorNodeToolbar />
-                <FlowEditor />
+                {flow ? <FlowEditor flow={flow} updateFlow={updateFlow} /> : ''}
             </div>
         </FlowEditorContext.Provider>
     </ReactFlowProvider>

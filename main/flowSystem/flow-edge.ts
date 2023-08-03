@@ -1,5 +1,6 @@
 import {nanoid} from "nanoid";
 import {FlowNodeId} from "./flow-node";
+import {Edge} from "reactflow";
 
 export type FlowEdgeSerialized = Omit<FlowEdge, never>
 export type FlowEdgeId = string;
@@ -12,6 +13,18 @@ export default class FlowEdge {
     targetId: FlowNodeId = '';
     sourceHandleIndex: number = 0;
     targetHandleIndex: number = 0;
+
+    getEdge(): Edge
+    {
+        return {
+            id: this.id,
+            label: this.label,
+            source: this.sourceId,
+            target: this.targetId,
+            sourceHandle: this.sourceHandleIndex.toString(10),
+            targetHandle: this.targetHandleIndex.toString(10),
+        }
+    }
 
     toSerialize(): FlowEdgeSerialized {
         return { ...this };

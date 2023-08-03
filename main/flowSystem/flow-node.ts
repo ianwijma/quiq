@@ -1,4 +1,5 @@
 import {nanoid} from "nanoid";
+import { Node } from 'reactflow';
 
 export type FlowNodeSerialized = Omit<FlowNode, never>
 export type FlowNodeId = string;
@@ -13,6 +14,21 @@ export default class FlowNode {
     positionY: number = 0;
     targetHandleAmount: number = 1;
     sourceHandleAmount: number = 1;
+
+    getNode(): Node
+    {
+        return {
+            id: this.id,
+            type: this.type,
+            position: { x: this.positionX, y: this.positionY },
+            data: {
+                ...this.data,
+                label: this.label,
+                targetHandleAmount: this.targetHandleAmount,
+                sourceHandleAmount: this.sourceHandleAmount,
+            }
+        }
+    }
 
     toSerialize(): FlowNodeSerialized {
         return { ...this };

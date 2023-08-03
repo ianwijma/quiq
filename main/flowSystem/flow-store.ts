@@ -69,4 +69,9 @@ export default class FlowStore {
             this.map[id] = Flow.fromSerialize(flowSerialised);
         });
     }
+
+    reset()
+    {
+        this.store.delete('serialized-flow-map');
+    }
 }

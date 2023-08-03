@@ -9,29 +9,29 @@ export const flexNodeType = 'flex'
 export interface FlexNodeData {
     label: string,
     code: string,
-    numberOfTargets: number,
-    numberOfSources: number,
+    targetHandleAmount: number,
+    sourceHandleAmount: number,
 }
 
 export const flexNodeDefaultData: FlexNodeData = Object.freeze({
     label: 'Flex Node',
     code: '',
-    numberOfTargets: 2,
-    numberOfSources: 1,
+    targetHandleAmount: 2,
+    sourceHandleAmount: 1,
 })
 
-export default memo(({ id, data, className = '' }) => {
+export default memo(({ id, data, className = '', disableHandles = false }) => {
     const dataWithDefaults = {...flexNodeDefaultData, ...data};
-    const { numberOfSources, numberOfTargets, label } = dataWithDefaults;
+    const { sourceHandleAmount, targetHandleAmount, label } = dataWithDefaults;
 
-    const targets = new Array(numberOfTargets).fill(null);
-    const sources = new Array(numberOfSources).fill(null);
+    const targets = new Array(targetHandleAmount).fill(null);
+    const sources = new Array(sourceHandleAmount).fill(null);
 
     const minHeight = useMemo(() => {
-        const largestHandles = numberOfTargets > numberOfSources ? numberOfTargets : numberOfSources;
+        const largestHandles = targetHandleAmount > sourceHandleAmount ? targetHandleAmount : sourceHandleAmount;
         const minHeight = 20;
         return largestHandles > 0 ? largestHandles * minHeight : minHeight;
-    }, [numberOfSources, numberOfTargets]);
+    }, [sourceHandleAmount, targetHandleAmount]);
 
     const { editNode } = useContext(FlowEditorContext);
 
@@ -45,7 +45,7 @@ export default memo(({ id, data, className = '' }) => {
                 </div>
             </div>
 
-            <div className='flex flex-col justify-around'>
+            {disableHandles ? '' : <div className='flex flex-col justify-around'>
                 {targets.map((_, i) => (
                     <Handle
                         key={i}
@@ -56,7 +56,7 @@ export default memo(({ id, data, className = '' }) => {
                         style={{ top: 'unset', transform: 'unset', position: 'unset' }}
                     />
                 ))}
-            </div>
+            </div>}
 
             <div className='bg-primary-600 flex justify-center items-center px-4 py-2 gap-2 w-full'>
                 <FontAwesomeIcon icon={faCode} />
@@ -64,7 +64,7 @@ export default memo(({ id, data, className = '' }) => {
                     {label}
                 </label>
             </div>
-            <div className='flex flex-col justify-around'>
+            {disableHandles ? '' : <div className='flex flex-col justify-around'>
                 {sources.map((_, i) => (
                     <Handle
                         key={i}
@@ -75,7 +75,8 @@ export default memo(({ id, data, className = '' }) => {
                         style={{ top: 'unset', transform: 'unset', position: 'unset' }}
                     />
                 ))}
-            </div>
+            </div>}
+
         </div>
 
     )

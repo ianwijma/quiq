@@ -1,7 +1,6 @@
 import ReactFlow, {
     addEdge,
-    Controls,
-    Edge,
+    Controls, Edge,
     MiniMap,
     Node,
     Position,
@@ -9,56 +8,89 @@ import ReactFlow, {
     useEdgesState,
     useNodesState
 } from "reactflow";
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import 'reactflow/dist/base.css'
 import TriggerNode, {triggerNodeType} from "./nodes/TriggerNode";
 import FlexNode, {flexNodeType} from "./nodes/FlexNode";
-
-const triggerNode: Node = {
-    id: 'trigger-node',
-    dragHandle: 'immovable',
-    position: { x: 0, y: 0 },
-    data: { label: 'Flow Name Here' },
-    type: 'trigger',
-};
-
-const initialNodes: Node[] = [
-    {
-        id: 'node-uuid-1',
-        position: { x: 300, y: 0 },
-        data: { label: 'first' },
-        type: 'flex',
-    },
-    {
-        id: 'node-uuid-2',
-        data: { label: 'second' },
-        position: { x: 600, y: 0 },
-        type: 'flex',
-    },
-];
-
-const triggerEdge: Edge = {
-    id: 'trigger-edge',
-    target: 'node-uuid-1',
-    targetHandle: '0',
-    source: 'trigger-node',
-};
-const initialEdges: Edge[] = [{
-    id: 'edge-uuid-3',
-    target: 'node-uuid-2',
-    targetHandle: '0',
-    source: 'node-uuid-1',
-    sourceHandle: '0',
-}];
+import Flow from "../../../main/flowSystem/flow";
+import FlowNode, {FlowNodeSerialized} from "../../../main/flowSystem/flow-node";
+import FlowEdge, {FlowEdgeSerialized} from "../../../main/flowSystem/flow-edge";
+import {nanoid} from "nanoid";
 
 const nodeTypes = {
     [triggerNodeType]: TriggerNode,
     [flexNodeType]: FlexNode,
 }
 
-export default () => {
+function flowNodeToNode(flowNode: FlowNodeSerialized): Node
+{
+    return {
+        id: flowNode.id,
+        type: flowNode.type,
+        position: { x: flowNode.positionX, y: flowNode.positionY },
+        data: {
+            ...flowNode.data,
+            label: flowNode.label,
+            targetHandleAmount: flowNode.targetHandleAmount,
+            sourceHandleAmount: flowNode.sourceHandleAmount,
+        }
+    }
+}
+
+function nodeToFlowNode(node: Node): Partial<FlowNode>
+{
+    const { label = '', sourceHandleAmount = 1, targetHandleAmount = 1, ...restData } = node.data
+    const { x: xPos = 0, y: yPos = 0 } = node.position
+
+    return {
+        data: restData,
+        id: node.id,
+        label: label,
+        positionX: xPos,
+        positionY: yPos,
+        sourceHandleAmount: sourceHandleAmount,
+        targetHandleAmount: targetHandleAmount,
+        type: node.type,
+    }
+}
+
+function flowEdgeToEdge(flowEdge: FlowEdgeSerialized): Edge
+{
+    return {
+        id: flowEdge.id,
+        label: flowEdge.label,
+        source: flowEdge.sourceId,
+        target: flowEdge.targetId,
+        sourceHandle: flowEdge.sourceHandleIndex.toString(10),
+        targetHandle: flowEdge.targetHandleIndex.toString(10),
+    }
+}
+
+function edgeToFlowEdge(edge: Edge): Partial<FlowEdge>
+{
+    return {
+        id: edge.id,
+        label: edge?.label?.toString() ?? '',
+        sourceHandleIndex: parseInt(edge.sourceHandle ?? '0', 10),
+        sourceId: edge.source,
+        targetHandleIndex: parseInt(edge.targetHandle  ?? '0', 10),
+        targetId: edge.target,
+    }
+}
+
+export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => void}) => {
+    const initialNodes: Node[] = flow.flowNodes.map(flowNode => flowNodeToNode(flowNode));
+    const initialEdges: Edge[] = flow.flowEdges.map(flowEdge => flowEdgeToEdge(flowEdge));
+    const triggerNode: Node = {
+        id: 'trigger-node',
+        dragHandle: 'immovable',
+        position: { x: 0, y: 0 },
+        data: { label: flow.name },
+        type: 'trigger',
+    }
+
     const [nodes, setNodes, onNodesChange] = useNodesState([triggerNode, ...initialNodes]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([triggerEdge, ...initialEdges]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
     // Drag and drop
     const reactFlowWrapper = useRef(null);
@@ -88,9 +120,15 @@ export default () => {
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
-    let id = 0;
-    const getId = () => `dndnode_${id++}`;
+    useEffect(() => {
+        const flowNodes  = nodes.filter(node => node.id !== 'trigger-node').map(node => nodeToFlowNode(node)) as FlowNode[];
+        const flowEdges = edges.map(edge => edgeToFlowEdge(edge)) as FlowEdge[];
 
+        flow.flowNodes = flowNodes;
+        flow.flowEdges = flowEdges;
+
+        updateFlow(flow);
+    }, [nodes, edges])
 
     const onDrop = useCallback(
         (event) => {
@@ -100,14 +138,12 @@ export default () => {
             const newNodeDataString = event.dataTransfer.getData('application/reactflow');
             const newNodeData: Partial<Node> = JSON.parse(newNodeDataString);
 
-            console.log(newNodeData)
-
             const position = reactFlowInstance.project({
                 x: event.clientX - reactFlowBounds.left,
                 y: event.clientY - reactFlowBounds.top,
             });
             const newNode = {
-                id: getId(),
+                id: nanoid(),
                 position,
                 data: { label: `${newNodeData.type} node` },
                 sourcePosition: Position.Right,
