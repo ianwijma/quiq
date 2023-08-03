@@ -5,6 +5,8 @@ import ApplicationKeybinds from "./application-keybinds/application-keybinds";
 import {FlowWindow} from "./windows/flow-window";
 import {isProd} from "./constants/isProd";
 import {FlowManager} from "./flow/flow-manager";
+import FlowStore from "./flowSystem/flow-store";
+import Flow from "./flowSystem/flow";
 
 let applicationKeybinds: ApplicationKeybinds;
 
@@ -22,32 +24,32 @@ if (isProd) {
     spawnWindow(new FlowWindow());
   }
 
-  const flowManager = new FlowManager();
-  await flowManager.loadFlows();
-
   // applicationKeybinds = new ApplicationKeybinds();
   // applicationKeybinds.reset();
   // applicationKeybinds.registerKeybind(new OpenSearch());
   // applicationKeybinds.load();
 
-  ipcMain.handle('list-flows', () => {
-    return flowManager.listFlows();
+  const flowStore = new FlowStore();
+  flowStore.load();
+
+  ipcMain.handle('list-flows', (): Flow[] => {
+    return flowStore.list();
   });
 
-  ipcMain.handle('get-flow', (event, args) => {
+  ipcMain.handle('get-flow', (event, args): Flow => {
     const {id} = args;
-    const flowMap = flowManager.mapFlows();
-    return flowMap[id];
+    return flowStore.get(id);
   });
 
-  ipcMain.handle('create-flow', (event, args) => {
+  ipcMain.handle('create-flow', (event, args): Flow => {
     const {name} = args;
-    return flowManager.createFlow(name);
+    return flowStore.create(name);
   });
 
-  ipcMain.handle('update-flow', (event, args) => {
-    const {flow} = args;
-    return flowManager.updateFlow(flow);
+  ipcMain.handle('update-flow', (event, args): Flow => {
+    let { flow } = args;
+    if (!(flow instanceof Flow)) flow = Flow.fromSerialize(flow)
+    return flowStore.update(flow);
   });
 })();
 

@@ -4,9 +4,9 @@ import {ipcRenderer} from "electron";
 import FlowEditorHeader from "../../components/flow-editor/header";
 import FlowEditorNodeToolbar from "../../components/flow-editor/node-toolbar";
 import FlowEditor from "../../components/flow-editor/editor";
-import Flow from "../../../main/flow/flow";
 import {ReactFlowProvider} from "reactflow";
 import {FlowEditorContext} from "../../contexts/flowEditorContext";
+import Flow from "../../../main/flowSystem/flow";
 
 export default () => {
     const { query } = useRouter();
@@ -18,7 +18,7 @@ export default () => {
         setFlow(flow);
     }
     const updateFlow = async (flow: Flow) => {
-        const updatedFlow: any = await ipcRenderer.invoke('update-flow', {flow});
+        const updatedFlow: Flow = await ipcRenderer.invoke('update-flow', {flow});
         setFlow(updatedFlow);
     }
 

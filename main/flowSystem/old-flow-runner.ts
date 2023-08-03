@@ -1,8 +1,8 @@
-import Flow from "./flow";
+import Flow from "../flow/flow";
 import ivm from 'isolated-vm';
-import {FlowNodeTypes} from "./flow-node";
+import {FlowNodeTypes} from "../flow/flow-node";
 
-export default class FlowRunner {
+export default class OldFlowRunner {
     constructor(private vm = new ivm.Isolate({ memoryLimit: 128 })) {}
 
 

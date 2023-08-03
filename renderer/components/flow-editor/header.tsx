@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Flow from "../../../main/flow/flow";
+import Flow from "../../../main/flowSystem/flow";
 
 export default ({ flow }: { flow: Flow }) => {
     return <div className="flex justify-between px-3 py-2 bg-gray-400">

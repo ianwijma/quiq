@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import {useRef} from "react";
-import Flow from "../../../main/flow/flow";
 import {useRouter} from "next/router";
+import Flow from "../../../main/flowSystem/flow";
 
 export default () => {
     const router = useRouter();
