@@ -6,7 +6,7 @@ import FlowEditorNodeToolbar from "../../components/flow-editor/node-toolbar";
 import FlowEditor from "../../components/flow-editor/editor";
 import {ReactFlowProvider} from "reactflow";
 import {FlowEditorContext} from "../../contexts/flowEditorContext";
-import Flow from "../../../main/flowSystem/flow";
+import Flow from "../../../backend/flowSystem/flow";
 
 export default () => {
     const { query } = useRouter();

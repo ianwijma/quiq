@@ -12,9 +12,9 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import 'reactflow/dist/base.css'
 import TriggerNode, {triggerNodeType} from "./nodes/TriggerNode";
 import FlexNode, {flexNodeType} from "./nodes/FlexNode";
-import Flow from "../../../main/flowSystem/flow";
-import FlowNode, {FlowNodeSerialized} from "../../../main/flowSystem/flow-node";
-import FlowEdge, {FlowEdgeSerialized} from "../../../main/flowSystem/flow-edge";
+import Flow from "../../../backend/flowSystem/flow";
+import FlowNode, {FlowNodeSerialized} from "../../../backend/flowSystem/flow-node";
+import FlowEdge, {FlowEdgeSerialized} from "../../../backend/flowSystem/flow-edge";
 import {nanoid} from "nanoid";
 
 const nodeTypes = {
