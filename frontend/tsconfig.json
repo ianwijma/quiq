@@ -10,6 +10,14 @@
   ],
   "compilerOptions": {
     "jsx": "preserve",
-    "module": "esnext"
+    "module": "esnext",
+    "paths": {
+      "@frontend": ["../frontend"],
+      "@frontend/*": ["../frontend/*"],
+      "@backend": ["../backend"],
+      "@backend/*": ["../backend/*"],
+      "@common": ["../common"],
+      "@common/*": ["../common/*"],
+    }
   }
 }

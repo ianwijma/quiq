@@ -4,9 +4,8 @@ import spawnWindow from "./windows/spawn-window";
 import ApplicationKeybinds from "./application-keybinds/application-keybinds";
 import {FlowWindow} from "./windows/flow-window";
 import {isProd} from "./constants/isProd";
-import {FlowManager} from "./flow/flow-manager";
-import FlowStore from "./flowSystem/flow-store";
-import Flow from "./flowSystem/flow";
+import FlowStore from "@common/flowSystem/flow-store";
+import Flow from "@common/flowSystem/flow";
 
 let applicationKeybinds: ApplicationKeybinds;
 

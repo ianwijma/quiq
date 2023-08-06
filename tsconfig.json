@@ -18,8 +18,24 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "paths": {
+      "@frontend": ["./frontend"],
+      "@frontend/*": ["./frontend/*"],
+      "@backend": ["./backend"],
+      "@backend/*": ["./backend/*"],
+      "@common": ["./common"],
+      "@common/*": ["./common/*"],
+    }
   },
+  "include": [
+    "./backend/**/*.ts",
+    "./backend/**/*.tsx",
+    "./frontend/**/*.ts",
+    "./frontend/**/*.tsx",
+    "./common/**/*.ts",
+    "./common/**/*.tsx"
+  ],
   "exclude": [
     "node_modules",
     "frontend/next.config.js",

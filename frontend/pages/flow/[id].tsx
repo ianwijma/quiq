@@ -6,7 +6,7 @@ import FlowEditorNodeToolbar from "../../components/flow-editor/node-toolbar";
 import FlowEditor from "../../components/flow-editor/editor";
 import {ReactFlowProvider} from "reactflow";
 import {FlowEditorContext} from "../../contexts/flowEditorContext";
-import Flow from "../../../backend/flowSystem/flow";
+import Flow from "@common/flowSystem/flow";
 
 export default () => {
     const { query } = useRouter();
@@ -15,11 +15,11 @@ export default () => {
     const [flow, setFlow] = useState<Flow>();
     const loadFlow = async (id) => {
         const flow: Flow = await ipcRenderer.invoke('get-flow', {id});
-        setFlow(flow);
+        setFlow(Flow.fromSerialize(flow));
     }
     const updateFlow = async (flow: Flow) => {
         const updatedFlow: Flow = await ipcRenderer.invoke('update-flow', {flow});
-        setFlow(updatedFlow);
+        setFlow(Flow.fromSerialize(updatedFlow));
     }
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import {ipcRenderer} from 'electron'
 import {useEffect, useState} from "react";
 import Link from "next/link";
-import Flow from "../../../backend/flowSystem/flow";
+import Flow from "@common/flowSystem/flow";
 
 export default () => {
     const [flows, setFlows] = useState<Flow[]>([]);

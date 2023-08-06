@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Flow from "../../../backend/flowSystem/flow";
+import Flow from "@common/flowSystem/flow";
 
 export default ({ flow }: { flow: Flow }) => {
     return <div className="flex justify-between px-3 py-2 bg-gray-400">
