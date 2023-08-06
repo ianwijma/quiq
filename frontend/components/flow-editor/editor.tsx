@@ -20,6 +20,15 @@ const nodeTypes = {
     [flexNodeType]: FlexNode,
 }
 
+/**
+ *  TODO: I want to update the flowEditor so it uses the Flow class for everything:
+ *  - Create a new node
+ *  - Create a new edge
+ *  - Update an node
+ *  - Update an edge
+ *
+ *  This should allow consistency
+ */
 export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => void}) => {
     // Not sure why, but flow seems to be casted from a class to a Object sometimes...
     flow = Flow.fromSerialize(flow);
@@ -66,7 +75,7 @@ export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => v
     }, []);
 
     useEffect(() => {
-        flow.setNodes(nodes);
+        flow.setNodes(nodes.filter(node => node.id !== 'trigger-node'));
         flow.setEdges(edges);
 
         updateFlow(flow);

@@ -1,5 +1,5 @@
-import FlowNode from './flow-node';
-import FlowEdge from './flow-edge';
+import FlowNode, {FlowNodeId} from './flow-node';
+import FlowEdge, {FlowEdgeId} from './flow-edge';
 import {nanoid} from "nanoid";
 import type { Node, Edge } from 'reactflow';
 
@@ -13,6 +13,23 @@ export default class Flow {
     flowNodes: FlowNode[] = [];
     flowEdges: FlowEdge[] = [];
 
+    isDifferent(otherFlow: Flow): boolean {
+        return JSON.stringify(this.toSerialize()) !== JSON.stringify(otherFlow.toSerialize())
+    }
+
+    getFlowNode(id: FlowNodeId): FlowNode|null {
+        return this.flowNodes.filter(flowNode => flowNode.id === id)[0] ?? null;
+    }
+
+    updateFlowNode(updatedFlowNode: FlowNode): void
+    {
+        this.flowNodes.forEach(flowNode => {
+            if (flowNode.id === updatedFlowNode.id) {
+                Object.assign(flowNode, {...updatedFlowNode});
+            }
+        })
+    }
+
     setNodes(nodes: Node[] = []): Flow
     {
         this.flowNodes = nodes.map(node => FlowNode.fromNode(node));
@@ -23,6 +40,19 @@ export default class Flow {
     getNodes(): Node[]
     {
         return this.flowNodes.map(flowNode => flowNode.getNode())
+    }
+
+    getFlowEdge(id: FlowEdgeId): FlowEdge|null {
+        return this.flowEdges.filter(flowEdge => flowEdge.id === id)[0] ?? null;
+    }
+
+    updateEdgeNode(updatedFlowEdge: FlowEdge): void
+    {
+        this.flowEdges.forEach(flowEdge => {
+            if (flowEdge.id === updatedFlowEdge.id) {
+                Object.assign(flowEdge, {...updatedFlowEdge});
+            }
+        })
     }
 
     setEdges(edges: Edge[] = []): Flow
@@ -48,7 +78,7 @@ export default class Flow {
 
     static fromSerialize(flowSerialized: FlowSerialized): Flow
     {
-        const {flowNodes: nodesSerialized = [], flowEdges: edgesSerialized = []} = flowSerialized;
+        const {flowNodes: nodesSerialized = [], flowEdges: edgesSerialized = []} = flowSerialized ?? {};
 
         return Object.assign(new Flow(), {
             ...flowSerialized,
