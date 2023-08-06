@@ -30,6 +30,26 @@ export default class FlowNode {
         }
     }
 
+    static fromNode(node: Node): FlowNode
+    {
+        const { label = '', sourceHandleAmount = 1, targetHandleAmount = 1, ...restData } = node.data
+        const { x: xPos = 0, y: yPos = 0 } = node.position
+
+        return Object.assign(
+            new FlowNode(),
+            {
+                data: restData,
+                id: node.id,
+                label: label,
+                positionX: xPos,
+                positionY: yPos,
+                sourceHandleAmount: sourceHandleAmount,
+                targetHandleAmount: targetHandleAmount,
+                type: node.type,
+            }
+        )
+    }
+
     toSerialize(): FlowNodeSerialized {
         return { ...this };
     }

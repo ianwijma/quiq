@@ -13,8 +13,6 @@ import 'reactflow/dist/base.css'
 import TriggerNode, {triggerNodeType} from "./nodes/TriggerNode";
 import FlexNode, {flexNodeType} from "./nodes/FlexNode";
 import Flow from "@common/flowSystem/flow";
-import FlowNode, {FlowNodeSerialized} from "@common/flowSystem/flow-node";
-import FlowEdge, {FlowEdgeSerialized} from "@common/flowSystem/flow-edge";
 import {nanoid} from "nanoid";
 
 const nodeTypes = {
@@ -22,65 +20,12 @@ const nodeTypes = {
     [flexNodeType]: FlexNode,
 }
 
-function flowNodeToNode(flowNode: FlowNodeSerialized): Node
-{
-    return {
-        id: flowNode.id,
-        type: flowNode.type,
-        position: { x: flowNode.positionX, y: flowNode.positionY },
-        data: {
-            ...flowNode.data,
-            label: flowNode.label,
-            targetHandleAmount: flowNode.targetHandleAmount,
-            sourceHandleAmount: flowNode.sourceHandleAmount,
-        }
-    }
-}
-
-function nodeToFlowNode(node: Node): Partial<FlowNode>
-{
-    const { label = '', sourceHandleAmount = 1, targetHandleAmount = 1, ...restData } = node.data
-    const { x: xPos = 0, y: yPos = 0 } = node.position
-
-    return {
-        data: restData,
-        id: node.id,
-        label: label,
-        positionX: xPos,
-        positionY: yPos,
-        sourceHandleAmount: sourceHandleAmount,
-        targetHandleAmount: targetHandleAmount,
-        type: node.type,
-    }
-}
-
-function flowEdgeToEdge(flowEdge: FlowEdgeSerialized): Edge
-{
-    return {
-        id: flowEdge.id,
-        label: flowEdge.label,
-        source: flowEdge.sourceId,
-        target: flowEdge.targetId,
-        sourceHandle: flowEdge.sourceHandleIndex.toString(10),
-        targetHandle: flowEdge.targetHandleIndex.toString(10),
-    }
-}
-
-function edgeToFlowEdge(edge: Edge): Partial<FlowEdge>
-{
-    return {
-        id: edge.id,
-        label: edge?.label?.toString() ?? '',
-        sourceHandleIndex: parseInt(edge.sourceHandle ?? '0', 10),
-        sourceId: edge.source,
-        targetHandleIndex: parseInt(edge.targetHandle  ?? '0', 10),
-        targetId: edge.target,
-    }
-}
-
 export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => void}) => {
-    const initialNodes: Node[] = flow.flowNodes.map(flowNode => flowNodeToNode(flowNode));
-    const initialEdges: Edge[] = flow.flowEdges.map(flowEdge => flowEdgeToEdge(flowEdge));
+    // Not sure why, but flow seems to be casted from a class to a Object sometimes...
+    flow = Flow.fromSerialize(flow);
+
+    const initialNodes: Node[] = flow.getNodes();
+    const initialEdges: Edge[] = flow.getEdges();
     const triggerNode: Node = {
         id: 'trigger-node',
         dragHandle: 'immovable',
@@ -121,11 +66,8 @@ export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => v
     }, []);
 
     useEffect(() => {
-        const flowNodes  = nodes.filter(node => node.id !== 'trigger-node').map(node => nodeToFlowNode(node)) as FlowNode[];
-        const flowEdges = edges.map(edge => edgeToFlowEdge(edge)) as FlowEdge[];
-
-        flow.flowNodes = flowNodes;
-        flow.flowEdges = flowEdges;
+        flow.setNodes(nodes);
+        flow.setEdges(edges);
 
         updateFlow(flow);
     }, [nodes, edges])

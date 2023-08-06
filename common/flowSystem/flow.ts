@@ -13,9 +13,23 @@ export default class Flow {
     flowNodes: FlowNode[] = [];
     flowEdges: FlowEdge[] = [];
 
+    setNodes(nodes: Node[] = []): Flow
+    {
+        this.flowNodes = nodes.map(node => FlowNode.fromNode(node));
+
+        return this;
+    }
+
     getNodes(): Node[]
     {
         return this.flowNodes.map(flowNode => flowNode.getNode())
+    }
+
+    setEdges(edges: Edge[] = []): Flow
+    {
+        this.flowEdges = edges.map(edge => FlowEdge.fromEdge(edge));
+
+        return this;
     }
 
     getEdges(): Edge[]

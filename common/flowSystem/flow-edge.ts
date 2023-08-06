@@ -26,6 +26,21 @@ export default class FlowEdge {
         }
     }
 
+    static fromEdge(edge: Edge): FlowEdge
+    {
+        return Object.assign(
+            new FlowEdge(),
+            {
+                id: edge.id,
+                label: edge?.label?.toString() ?? '',
+                sourceHandleIndex: parseInt(edge.sourceHandle ?? '0', 10),
+                sourceId: edge.source,
+                targetHandleIndex: parseInt(edge.targetHandle  ?? '0', 10),
+                targetId: edge.target,
+            }
+        );
+    }
+
     toSerialize(): FlowEdgeSerialized {
         return { ...this };
     }
