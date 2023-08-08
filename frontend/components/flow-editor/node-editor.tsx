@@ -1,5 +1,6 @@
 import FlowNode from "@common/flowSystem/flow-node";
 import {FormData} from "next/dist/compiled/@edge-runtime/primitives/fetch";
+import useForm from "@frontend/hooks/useForm";
 
 interface IProps {
     flowNode: FlowNode,
@@ -11,17 +12,17 @@ export default ({ flowNode, updateFlowNode, cancelUpdate }: IProps) => {
     const { label, data, targetHandleAmount, sourceHandleAmount } = flowNode
     const { code } = data
 
+    const [formRef, formState] = useForm({
+        label, targetHandleAmount, sourceHandleAmount, code
+    })
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
-        debugger
-        flowNode.label = formData.get('label') as string;
-        flowNode.targetHandleAmount = parseInt(formData.get('targetHandleAmount') as string, 10);
-        flowNode.sourceHandleAmount = parseInt(formData.get('sourceHandleAmount') as string, 10);
-        flowNode.data.code = formData.get('code') as string;
-
-        // TODO: FormData does not seem to work :/
+        flowNode.label = formState.label as string;
+        flowNode.targetHandleAmount = formState.targetHandleAmount as number;
+        flowNode.sourceHandleAmount = formState.sourceHandleAmount as number;
+        flowNode.data.code = formState.code as string;
 
         updateFlowNode(flowNode);
     }
@@ -29,22 +30,22 @@ export default ({ flowNode, updateFlowNode, cancelUpdate }: IProps) => {
     return <div className="flex w-screen h-screen absolute">
         <div className="bg-black w-1/2 opacity-40"  onClick={cancelUpdate}></div>
         <div className="bg-white w-1/2 border-l border-l-black">
-            <form className="flex flex-col" onSubmit={handleSubmit}>
+            <form className="flex flex-col" onSubmit={handleSubmit} ref={formRef}>
                 <label>
                     Label
-                    <input required name='label' placeholder="Some label..." defaultValue={label} />
+                    <input required name='label' placeholder="Some label..." />
                 </label>
                 <label>
                     Target handles
-                    <input required type='number' min='0' max='10' name='targetHandleAmount' defaultValue={targetHandleAmount} />
+                    <input required type='number' min='0' max='10' name='targetHandleAmount' />
                 </label>
                 <label>
                     Source handles
-                    <input required type='number' min='0' max='10' name='sourceHandleAmount' defaultValue={sourceHandleAmount} />
+                    <input required type='number' min='0' max='10' name='sourceHandleAmount' />
                 </label>
                 <label>
                     Code
-                    <textarea placeholder='Memes' defaultValue={code}/>
+                    <textarea name='code' placeholder='Memes'/>
                 </label>
                 <button type='submit'>
                     Save

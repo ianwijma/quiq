@@ -14,7 +14,7 @@ export default () => {
     }, []);
 
     return <ul>
-        <li>
+        <li key='create'>
             <Link href='/flow/create'>Create Flow</Link>
         </li>
         {flows.map(({ id, name }) => (

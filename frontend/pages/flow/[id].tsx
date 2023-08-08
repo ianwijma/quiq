@@ -20,9 +20,7 @@ export default () => {
         setFlow(Flow.fromSerialize(flow));
     }
     const updateFlow = async (updatedFlow: Flow) => {
-        console.log('updatedFlow', updatedFlow);
         const returnFlow: Flow = await ipcRenderer.invoke('update-flow', {flow: updatedFlow});
-        console.log('returnFlow', returnFlow);
         setFlow(Flow.fromSerialize(returnFlow));
     }
 
@@ -34,9 +32,8 @@ export default () => {
     const [editFlowNode, setEditFlowNode] = useState<FlowNode|null>(null)
     const editNode = (id) => setEditFlowNode(flow.getFlowNode(id));
     const updateFlowNode = (updatedFlowNode) => {
-        console.log('updatedFlowNode', updatedFlowNode);
         flow.updateFlowNode(updatedFlowNode);
-        updateFlow(updatedFlowNode)
+        updateFlow(flow)
             .then(() => setEditFlowNode(null))
 
     };

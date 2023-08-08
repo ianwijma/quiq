@@ -20,21 +20,10 @@ const nodeTypes = {
     [flexNodeType]: FlexNode,
 }
 
-/**
- *  TODO: I want to update the flowEditor so it uses the Flow class for everything:
- *  - Create a new node
- *  - Create a new edge
- *  - Update an node
- *  - Update an edge
- *
- *  This should allow consistency
- */
 export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => void}) => {
     // Not sure why, but flow seems to be casted from a class to a Object sometimes...
     flow = Flow.fromSerialize(flow);
 
-    const initialNodes: Node[] = flow.getNodes();
-    const initialEdges: Edge[] = flow.getEdges();
     const triggerNode: Node = {
         id: 'trigger-node',
         dragHandle: 'immovable',
@@ -43,12 +32,14 @@ export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => v
         type: 'trigger',
     }
 
-    const [nodes, setNodes, onNodesChange] = useNodesState([triggerNode, ...initialNodes]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const [nodes, setNodes, onNodesChange] = useNodesState([triggerNode, ...flow.getNodes()]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(flow.getEdges());
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+
     // Drag and drop
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
     // Disconnect edge on drop
     const edgeUpdateSuccessful = useRef(true);
 

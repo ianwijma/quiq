@@ -29,6 +29,7 @@ if (isProd) {
   // applicationKeybinds.load();
 
   const flowStore = new FlowStore();
+  // flowStore.reset();
   flowStore.load();
 
   ipcMain.handle('list-flows', (): Flow[] => {
@@ -45,9 +46,9 @@ if (isProd) {
     return flowStore.create(name);
   });
 
-  ipcMain.handle('update-flow', (event, args): Flow => {
+  ipcMain.handle('update-flow', async (event, args): Promise<Flow> => {
     let { flow } = args;
-    if (!(flow instanceof Flow)) flow = Flow.fromSerialize(flow)
+    if (!(flow instanceof Flow)) flow = Flow.fromSerialize(flow);
     return flowStore.update(flow);
   });
 })();
