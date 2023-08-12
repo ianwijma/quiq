@@ -18,7 +18,7 @@ export default memo(({ data }) => {
         const { label } = dataWithDefaults
         return (
             <div>
-                <div className='bg-primary-600 flex justify-center items-center px-4 gap-2'>
+                <div className='bg-primary-foreground flex justify-center items-center px-4 gap-2'>
                     <FontAwesomeIcon icon={faShuffle} />
                     <label>
                         {label}

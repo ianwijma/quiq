@@ -98,7 +98,7 @@ export default ({ flow, updateFlow }: {flow: Flow, updateFlow: (flow: Flow) => v
         [reactFlowInstance]
     );
 
-    return <div className='grow bg-gray-200' ref={reactFlowWrapper}>
+    return <div className='grow bg-slate-300' ref={reactFlowWrapper}>
         <ReactFlow
             // Handle events
             nodes={nodes}
