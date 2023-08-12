@@ -56,8 +56,6 @@ export default class FlowStore {
             return returnObject;
         }, {});
 
-        console.log('flowMapSerialized', flowMapSerialized)
-
         this.store.set('serialized-flow-map', flowMapSerialized);
     }
 
